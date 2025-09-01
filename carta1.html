@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sua Cartinha Especial</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper-bg: #e9e0cb;
+            --paper-texture: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ccc' fill-opacity='0.1'%3E%3Cpath fill-rule='evenodd' d='M5 0h1v5H0v1h5v1H0v-5h1V0h4zm-2 2h2v2H3V2zm2 2h1v2H5V4zm-2 0h1v1H3V4zM2 2h1v1H2V2z'/%3E%3C/g%3E%3C/svg%3E");
+            --text-color: #554440;
+            --gold: #d8b36a;
+            --envelope-gold: #b3967d;
+        }
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            background-color: #0c0c0e;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* ====== ENVELOPE ====== */
+        .envelope-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 200px;
+            cursor: pointer;
+            transition: opacity 0.5s ease;
+            z-index: 10;
+        }
+        .envelope-body {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #d8b36a, var(--envelope-gold));
+            border-radius: 12px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3), inset 0 0 12px rgba(255,255,255,0.2);
+            position: relative;
+        }
+        .envelope-flap {
+            position: absolute;
+            top: 1px;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 100px solid #a87c61;
+            border-radius: 12px;
+            transform-origin: top center;
+            transition: transform 0.8s ease;
+            z-index: 2;
+        }
+        .envelope-container.open .envelope-flap {
+            transform: rotateX(180deg);
+            transform-origin: top center;
+        }
+        .envelope-container.open .envelope-body {
+            transform: translateY(50px);
+        }
+
+        /* ====== CARTA / PERGAMINHO ====== */
+        .carta {
+            width: min(720px, 90vw);
+            max-height: 90vh;
+            padding: 3rem 2.5rem;
+            border-radius: 20px;
+            background: var(--paper-bg);
+            background-image: var(--paper-texture), linear-gradient(to bottom, #f9f1e8 0%, #f0e1cd 100%);
+            box-shadow: inset 0 0 25px rgba(0,0,0,0.15), 0 15px 40px rgba(0,0,0,0.3);
+            text-align: center;
+            opacity: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
+            transition: opacity 1s ease, transform 1s ease;
+            overflow-y: auto;
+        }
+        .carta.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        .carta-header {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--text-color);
+            margin-bottom: 0.8rem;
+            text-shadow: 0 0 8px rgba(255,200,150,0.5);
+        }
+        .carta-message {
+            font-family: 'Cedarville Cursive', cursive;
+            font-size: 1.25rem;
+            line-height: 1.8;
+            color: var(--text-color);
+            min-height: 140px;
+            text-align: left;
+            margin-top: 24px;
+        }
+        .carta-message.typing::after {
+            content: "|";
+            animation: blink-caret 0.8s infinite step-end;
+            margin-left: 2px;
+            font-size: 1.3em;
+        }
+        @keyframes blink-caret { from, to { visibility: hidden; } 50% { visibility: visible; } }
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 18px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="bgCanvas"></canvas>
+    
+    <a href="https://seu-usuario.github.io/" class="back-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/></svg>
+        Voltar
+    </a>
+
+    <div class="envelope-container" id="envelope">
+        <div class="envelope-flap"></div>
+        <div class="envelope-body"></div>
+    </div>
+
+    <div class="carta" id="carta">
+        <h1 class="carta-header" id="cartaTitulo"></h1>
+        <p class="carta-message" id="cartaTexto"></p>
+        <span style="font-size:1rem;color:var(--text-color);opacity:.8" id="assinatura"></span>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const destinatario = params.get('dest');
+            const remetente = params.get('rem');
+            const tema = params.get('tema');
+            const mensagem = params.get('msg');
+
+            const envelope = document.getElementById('envelope');
+            const carta = document.getElementById('carta');
+            const cartaTitulo = document.getElementById('cartaTitulo');
+            const cartaTexto = document.getElementById('cartaTexto');
+            const assinatura = document.getElementById('assinatura');
+            const bgCanvas = document.getElementById('bgCanvas');
+
+            const tituloTexto = tema ? `${tema} Especial para ${destinatario}` : `Uma Mensagem para Você, ${destinatario}`;
+            const assinaturaTexto = remetente ? `Com carinho, ${remetente}` : 'Com carinho, Seu Remetente Secreto';
+            const mensagemFinal = mensagem || 'Que esta mensagem toque seu coração e lembre o quanto você é especial!';
+
+            cartaTitulo.textContent = tituloTexto;
+            assinatura.textContent = assinaturaTexto;
+
+            envelope.addEventListener('click', () => {
+                envelope.classList.add('open');
+                setTimeout(() => {
+                    envelope.style.opacity = '0';
+                    carta.classList.add('show');
+                    typeWriter(cartaTexto, mensagemFinal, 30);
+                }, 800);
+            });
+
+            function typeWriter(el, text, speed) {
+                el.innerHTML = '';
+                el.classList.add('typing');
+                let i = 0;
+                (function t() {
+                    if (i < text.length) {
+                        const char = text.charAt(i);
+                        el.innerHTML += (char === '\n') ? '<br>' : char;
+                        i++;
+                        setTimeout(t, speed);
+                    } else {
+                        el.classList.remove('typing');
+                    }
+                })();
+            }
+
+            // ====== ANIMAÇÃO DE FUNDO - Corações e Partículas ======
+            const ctx = bgCanvas.getContext('2d');
+            let hearts = [];
+            let particles = [];
+            let mouse = { x: -999, y: -999 };
+            let isMouseActive = false;
+
+            function fitCanvas() {
+                bgCanvas.width = window.innerWidth;
+                bgCanvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', fitCanvas);
+            fitCanvas();
+
+            function createHeart() {
+                return {
+                    x: Math.random() * bgCanvas.width,
+                    y: Math.random() * bgCanvas.height,
+                    size: 4 + Math.random() * 6,
+                    baseSize: 4 + Math.random() * 6,
+                    speedX: (Math.random() - 0.5) * 0.4,
+                    speedY: (Math.random() - 0.5) * 0.4,
+                    opacity: 0.2 + Math.random() * 0.35,
+                    pulse: Math.random() * Math.PI * 2
+                };
+            }
+
+            function drawHeart(h) {
+                ctx.save();
+                ctx.translate(h.x, h.y);
+                const scale = (h.size / 50) * (1 + 0.07 * Math.sin(h.pulse));
+                ctx.scale(scale, scale);
+                ctx.beginPath();
+                ctx.globalAlpha = h.opacity;
+                ctx.fillStyle = "rgba(255, 0, 100, 0.65)";
+                ctx.moveTo(0, 0);
+                ctx.bezierCurveTo(-25, -25, -50, 10, 0, 40);
+                ctx.bezierCurveTo(50, 10, 25, -25, 0, 0);
+                ctx.fill();
+                ctx.restore();
+            }
+
+            for (let i = 0; i < 180; i++) hearts.push(createHeart());
+
+            bgCanvas.addEventListener('mousemove', e => {
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+                isMouseActive = true;
+            });
+
+            bgCanvas.addEventListener('mouseleave', () => { isMouseActive = false; });
+
+            function animate() {
+                ctx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+                
+                // Conexões
+                for (let i = 0; i < hearts.length; i++) {
+                    for (let j = i + 1; j < hearts.length; j++) {
+                        const dx = hearts[i].x - hearts[j].x;
+                        const dy = hearts[i].y - hearts[j].y;
+                        const dist = Math.hypot(dx, dy);
+                        if (dist < 120) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = `rgba(255, 80, 150, ${1 - (dist / 120)})`;
+                            ctx.lineWidth = 1;
+                            ctx.moveTo(hearts[i].x, hearts[i].y);
+                            ctx.lineTo(hearts[j].x, hearts[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+                
+                hearts.forEach(h => {
+                    // Interação com o mouse
+                    if (isMouseActive) {
+                        const dx = mouse.x - h.x;
+                        const dy = mouse.y - h.y;
+                        const dist = Math.hypot(dx, dy);
+                        if (dist < 80) {
+                            h.size = Math.min(h.baseSize + 10, 30);
+                            h.opacity = Math.min(h.opacity + 0.05, 0.8);
+                        } else {
+                            h.size = h.baseSize;
+                            h.opacity = 0.2 + Math.random() * 0.35;
+                        }
+                    }
+                    
+                    h.x += h.speedX;
+                    h.y += h.speedY;
+                    h.pulse += 0.03;
+                    if (h.x < -50) h.x = bgCanvas.width + 50;
+                    if (h.x > bgCanvas.width + 50) h.x = -50;
+                    if (h.y < -50) h.y = bgCanvas.height + 50;
+                    if (h.y > bgCanvas.height + 50) h.y = -50;
+
+                    drawHeart(h);
+                });
+                
+                requestAnimationFrame(animate);
+            }
+            animate();
+        });
+    </script>
+</body>
+</html>

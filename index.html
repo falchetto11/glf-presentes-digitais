@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>GLF Presentes Digitais — Cartinhas & Experiências Online</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* ====== RESET / BASE ====== */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg1:#0c0c0e; --bg2:#141216; --bg3:#1b1418;
+  --red:#ff3b3b; --red-600:#e83131; --gold:#d8b36a; --gold-400:#f2cf88;
+  --text:#f6f6f7; --text-dim:#cfcfd3; --card:#171519; --stroke:rgba(255,255,255,0.08);
+  --shadow:0 10px 30px rgba(0,0,0,.45);
+}
+html,body{height:100%}
+body{
+  font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(1200px 600px at 20% -10%, rgba(255,0,60,.15), transparent 60%),
+    radial-gradient(900px 500px at 110% 20%, rgba(255,200,60,.12), transparent 55%),
+    linear-gradient(180deg, var(--bg1), var(--bg2) 60%, var(--bg3));
+}
+
+/* ====== LAYOUT ====== */
+.container{width:90%;max-width:1200px;margin:0 auto;padding:24px}
+.header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 0;border-bottom:1px solid var(--stroke)
+}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .logo{
+  width:40px;height:40px;border-radius:12px;
+  background: radial-gradient(circle at 30% 30%, #ff7272, #b0002a);
+  box-shadow: 0 8px 20px rgba(255,0,60,.3), inset 0 0 20px rgba(0,0,0,.4);
+}
+.brand .name{
+  font-family:'Playfair Display',serif;
+  font-weight:700;font-size:1.25rem;letter-spacing:.5px;
+  background:linear-gradient(90deg, #ff7474, var(--gold));
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+}
+.header .badges{display:flex;gap:10px;flex-wrap:wrap}
+.badge{
+  font-size:.85rem;padding:6px 10px;border-radius:10px;border:1px solid var(--stroke);
+  background:rgba(255,255,255,.03)
+}
+
+/* ====== HERO ====== */
+.hero{
+  display:grid;grid-template-columns:1.1fr .9fr;gap:32px;align-items:center;
+  padding:56px 0;
+}
+.hero h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2rem,4vw,3.2rem);line-height:1.1;margin-bottom:12px;
+  background:linear-gradient(90deg, #ff5555, #ff8a3b 40%, var(--gold) 80%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  text-shadow:0 0 30px rgba(255,90,60,.08);
+}
+.hero p{color:var(--text-dim);font-size:1.05rem;margin-bottom:18px}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap}
+.btn{
+  padding:12px 20px;border-radius:12px;font-weight:700;border:1px solid transparent;
+  transition:transform .15s ease, box-shadow .2s ease, background .2s ease, border .2s ease;
+  box-shadow:var(--shadow); display:inline-flex; align-items:center; gap:8px;
+}
+.btn-primary{background:linear-gradient(90deg, var(--red), #ff7a3b); color:#fff}
+.btn-primary:hover{transform:translateY(-2px); box-shadow:0 14px 34px rgba(255,80,80,.35)}
+.btn-ghost{background:rgba(255,255,255,.04);border-color:var(--stroke);color:var(--text)}
+.btn-ghost:hover{background:rgba(255,255,255,.07)}
+
+/* ====== PRODUTOS ====== */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.card{
+  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+  border:1px solid var(--stroke); border-radius:18px; overflow:hidden;
+  box-shadow:var(--shadow); transition:transform .18s ease, box-shadow .2s ease, border .2s ease;
+}
+.card:hover{transform:translateY(-4px);box-shadow:0 18px 44px rgba(0,0,0,.55); border-color:rgba(255,120,70,.25)}
+.card .media{position:relative;overflow:hidden;height:190px;background:#0e0d10}
+.card .media img{width:100%;height:100%;object-fit:cover;display:block;opacity:.95}
+.card .body{padding:16px}
+.card h3{font-size:1.05rem;margin:2px 0 8px}
+.price{display:flex;align-items:center;gap:8px;margin:6px 0 14px}
+.price .v{font-weight:800;font-size:1.15rem}
+.price .pix{font-size:.85rem;color:var(--gold)}
+.card .actions{display:flex;gap:8px}
+.btn-view{background:rgba(255,255,255,.05); color:#fff}
+.btn-buy{background:linear-gradient(90deg, var(--red), #ff7a3b); color:#fff}
+.btn-view:hover{background:rgba(255,255,255,.09)}
+.btn-buy:hover{filter:saturate(1.05)}
+
+/* labels */
+.flag{
+  position:absolute;top:12px;left:12px;padding:6px 10px;border-radius:999px;
+  font-size:.78rem;font-weight:700;color:#1a0f0f;background:#ffd369; color:#432f00;
+  box-shadow:0 8px 20px rgba(255,211,105,.35)
+}
+
+/* ====== MODAL ====== */
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:9999}
+.modal.open{display:flex}
+.modal .scrim{position:absolute;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(4px)}
+.modal .panel{
+  position:relative;width:min(960px,94vw);max-height:92vh;overflow:hidden;border-radius:18px;
+  background:#0f0e12;border:1px solid var(--stroke); box-shadow:0 30px 80px rgba(0,0,0,.7)
+}
+.modal header{
+  display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--stroke);
+  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+}
+.modal header h4{
+  font-family:'Playfair Display',serif;font-size:1.1rem;
+  background:linear-gradient(90deg,#ff6868,#ff9a4a,var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.modal .close{background:transparent;border:none;color:#fff;font-size:1.6rem;cursor:pointer;opacity:.8}
+.modal .close:hover{opacity:1}
+
+/* ====== PREVIEW PRODUTO 1 (cartinha real) ====== */
+.preview-wrap{position:relative;height:620px;background:#0c0b0e}
+#p1-canvas{position:absolute;inset:0;width:100%;height:100%}
+
+/* Envelope (SVG estável) */
+.p1-envelope{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:3
+}
+.p1-envelope button{
+  background:transparent;border:none;cursor:pointer;transform-origin:center;transition:transform .25s ease, opacity .25s ease;
+}
+.p1-envelope button:hover{transform:scale(1.03)}
+.p1-envelope svg{
+  width:260px;height:auto;filter:drop-shadow(0 18px 30px rgba(0,0,0,.45))
+}
+
+/* Pergaminho */
+.p1-paper{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.96);
+  width:min(760px,86%);padding:44px 34px;border-radius:18px;z-index:2;opacity:0;pointer-events:none;
+  background:
+    radial-gradient(600px 220px at 50% 0%, rgba(255,255,255,.12), transparent 70%),
+    radial-gradient(600px 220px at 50% 100%, rgba(255,255,255,.08), transparent 70%),
+    linear-gradient(180deg, #f6ecd7 0%, #efdfc3 60%, #e6d2ad 100%);
+  box-shadow: inset 0 0 40px rgba(115,85,45,.35), 0 24px 60px rgba(0,0,0,.55);
+  border:1px solid rgba(120,80,40,.25);
+}
+.p1-paper:before, .p1-paper:after{
+  content:""; position:absolute; inset:14px; border-radius:12px; pointer-events:none;
+  border:1px dashed rgba(120,80,40,.28);
+}
+.p1-title{
+  font-family:'Playfair Display',serif; font-size:1.8rem; text-align:center; margin-bottom:10px;
+  color:#4b2e2e; text-shadow:0 2px 0 rgba(255,255,255,.45)
+}
+.p1-text{
+  font-family:'Playfair Display',serif; font-size:1.15rem; color:#3a2626; line-height:1.9;
+  background:rgba(255,245,220,.55); padding:18px 20px; border-radius:12px;
+  box-shadow:inset 0 0 18px rgba(255,255,255,.25)
+}
+
+/* footer do preview */
+.preview-actions{display:flex;gap:10px;justify-content:center;padding:14px;border-top:1px solid var(--stroke);background:#121015}
+.preview-actions .btn{box-shadow:none}
+
+/* ====== FORM GERAR CARTINHA ====== */
+.form{
+  margin:40px 0;background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+  border:1px solid var(--stroke); border-radius:16px; padding:20px; box-shadow:var(--shadow)
+}
+.form h3{
+  font-family:'Playfair Display',serif;margin-bottom:4px;
+  background:linear-gradient(90deg,#ff6b6b,#ff9b4b,var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}
+.input{
+  background:#101014;border:1px solid var(--stroke);border-radius:10px;color:#fff;padding:12px 12px;font-size:1rem;outline:none;
+}
+.input:focus{border-color:rgba(255,140,80,.4); box-shadow:0 0 0 3px rgba(255,120,70,.15)}
+.textarea{grid-column:1/-1; min-height:110px; resize:vertical}
+.form .btn{margin-top:8px}
+.share{
+  display:none; margin-top:14px; padding:14px; background:rgba(255,255,255,.04); border:1px dashed var(--stroke); border-radius:10px
+}
+.share input{width:100%; background:#0d0e12; border:1px solid var(--stroke); color:#fff; padding:10px; border-radius:8px; text-align:center;}
+
+/* ====== FOOTER ====== */
+footer{border-top:1px solid var(--stroke);padding:26px 0;text-align:center;color:var(--text-dim);font-size:.95rem}
+
+/* ====== RESPONSIVO ====== */
+@media(max-width:1000px){
+  .hero{grid-template-columns:1fr;gap:18px}
+}
+@media(max-width:860px){
+  .grid{grid-template-columns:1fr 1fr}
+  .preview-wrap{height:560px}
+}
+@media(max-width:580px){
+  .grid{grid-template-columns:1fr}
+  .row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+  <div class="container">
+    <!-- HEADER -->
+    <div class="header">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="name">GLF Presentes Digitais</div>
+      </div>
+      <div class="badges">
+        <div class="badge">Entrega instantânea</div>
+        <div class="badge">Pagamento seguro</div>
+        <div class="badge">Personalizável</div>
+      </div>
+    </div>
+
+    <!-- HERO -->
+    <section class="hero" id="topo">
+      <div>
+        <h1>Presentes Digitais com toque de luxo</h1>
+        <p>Surpreenda com cartinhas animadas e experiências interativas. Você compra online e a pessoa recebe um link exclusivo — simples, rápido e inesquecível.</p>
+        <div class="cta-row">
+          <a href="#produtos" class="btn btn-primary">Ver presentes</a>
+          <a href="#form" class="btn btn-ghost">Personalizar cartinha</a>
+        </div>
+      </div>
+      <div aria-hidden="true">
+        <!-- Mock hero art -->
+        <div style="border-radius:18px;height:260px;background:
+             radial-gradient(600px 220px at 70% -40%, rgba(255,95,0,.18), transparent 60%),
+             radial-gradient(400px 200px at -10% 120%, rgba(255,200,80,.18), transparent 60%),
+             linear-gradient(180deg, #141216, #0f0e12);
+             border:1px solid var(--stroke); box-shadow:var(--shadow); position:relative;overflow:hidden">
+          <div style="position:absolute;inset:0;opacity:.12;background:
+             repeating-linear-gradient(45deg, transparent 0 10px, rgba(255,255,255,.15) 10px 12px);"></div>
+          <div style="position:absolute;bottom:18px;left:18px;color:var(--text-dim);font-size:.92rem">✨ Design premium • Visual profissional</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUTOS -->
+    <section id="produtos" class="grid" aria-label="Lista de produtos">
+      <!-- Produto 1 -->
+      <article class="card" data-product="p1">
+        <div class="media">
+          <span class="flag">MAIS VENDIDO</span>
+          <img src="https://images.unsplash.com/photo-1519682337058-a94d519337bc?q=80&w=1200&auto=format&fit=crop" alt="Cartinha Animada — Pergaminho Romântico">
+        </div>
+        <div class="body">
+          <h3>Cartinha Animada • Pergaminho</h3>
+          <div class="price">
+            <span class="v">R$ 9,90</span>
+            <span class="pix">via Pix/Cartão</span>
+          </div>
+          <div class="actions">
+            <button class="btn btn-view" data-open="modal-p1">Visualizar</button>
+            <button class="btn btn-buy" onclick="document.getElementById('form').scrollIntoView({behavior:'smooth'})">Comprar</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Produto 2 -->
+      <article class="card" data-product="p2">
+        <div class="media">
+          <img src="https://images.unsplash.com/photo-1529101091764-c3526daf38fe?q=80&w=1200&auto=format&fit=crop" alt="Experiência Digital Interativa">
+        </div>
+        <div class="body">
+          <h3>Experiência Digital Interativa</h3>
+          <div class="price">
+            <span class="v">R$ 14,90</span>
+            <span class="pix">via Pix/Cartão</span>
+          </div>
+          <div class="actions">
+            <button class="btn btn-view" data-open="modal-p2">Visualizar</button>
+            <a class="btn btn-buy" href="#" target="_blank" rel="noopener">Comprar</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Produto 3 -->
+      <article class="card" data-product="p3">
+        <div class="media">
+          <img src="https://images.unsplash.com/photo-1510751007277-36932aac9ebd?q=80&w=1200&auto=format&fit=crop" alt="Cartinha Netflix Style">
+        </div>
+        <div class="body">
+          <h3>Cartinha Estilo Netflix™</h3>
+          <div class="price">
+            <span class="v">R$ 12,90</span>
+            <span class="pix">via Pix/Cartão</span>
+          </div>
+          <div class="actions">
+            <button class="btn btn-view" data-open="modal-p3">Visualizar</button>
+            <a class="btn btn-buy" href="#" target="_blank" rel="noopener">Comprar</a>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- FORM GERAR CARTINHA (Produto 1) -->
+    <section id="form" class="form" aria-labelledby="form-title">
+      <h3 id="form-title">Personalize sua Cartinha (Produto 1)</h3>
+      <p style="color:var(--text-dim);font-size:.95rem;margin-bottom:8px">Preencha os campos e gere um link exclusivo para compartilhar.</p>
+      <div class="row">
+        <input class="input" id="destinatario" placeholder="Nome do destinatário" required>
+        <input class="input" id="remetente" placeholder="Seu nome" required>
+        <input class="input" id="tema" placeholder="Tema (ex.: Aniversário, Amor...)" >
+        <textarea class="input textarea" id="mensagem" placeholder="Sua mensagem" required></textarea>
+      </div>
+      <button class="btn btn-primary" id="gerar">Gerar cartinha</button>
+      <div class="share" id="shareBox">
+        <p style="margin-bottom:8px">Link da sua cartinha:</p>
+        <input id="shareLink" readonly>
+        <div class="cta-row" style="margin-top:10px">
+          <button class="btn btn-ghost" id="copyBtn">Copiar link</button>
+          <a class="btn btn-primary" id="openLink" target="_blank" rel="noopener">Abrir em nova aba</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- MODAL PRODUTO 1: Cartinha real -->
+  <div class="modal" id="modal-p1" aria-hidden="true" role="dialog" aria-label="Prévia da Cartinha Animada">
+    <div class="scrim" data-close="modal"></div>
+    <div class="panel">
+      <header>
+        <h4>💌 Cartinha Animada • Pergaminho</h4>
+        <button class="close" aria-label="Fechar" data-close="modal">&times;</button>
+      </header>
+      <div class="preview-wrap" id="p1-wrap">
+        <canvas id="p1-canvas"></canvas>
+
+        <!-- ENVELOPE (SVG estável, sem bug) -->
+        <div class="p1-envelope" id="p1-envelope">
+          <button aria-label="Abrir carta" id="p1-open">
+            <svg viewBox="0 0 600 420" xmlns="http://www.w3.org/2000/svg">
+              <!-- corpo -->
+              <rect x="40" y="80" width="520" height="260" rx="22" fill="url(#gradBody)"/>
+              <!-- aba -->
+              <path d="M40 100 L300 260 L560 100 V80 H40 Z" fill="url(#gradLid)" />
+              <!-- brilho -->
+              <rect x="40" y="80" width="520" height="260" rx="22" fill="url(#gloss)" opacity=".35"/>
+              <!-- selo -->
+              <circle cx="300" cy="210" r="26" fill="#8e1a2b" stroke="rgba(0,0,0,.2)" stroke-width="4"/>
+              <text x="300" y="216" text-anchor="middle" font-size="22" fill="#ffd9a8" font-family="serif">💘</text>
+              <defs>
+                <linearGradient id="gradBody" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="#cbb297"/><stop offset="100%" stop-color="#b3967d"/>
+                </linearGradient>
+                <linearGradient id="gradLid" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="#b48367"/><stop offset="100%" stop-color="#9b7057"/>
+                </linearGradient>
+                <linearGradient id="gloss" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#ffffff00"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </button>
+        </div>
+
+        <!-- PERGAMINHO -->
+        <div class="p1-paper" id="p1-paper">
+          <div class="p1-title">Pergaminho Especial</div>
+          <div class="p1-text" id="p1-text"></div>
+        </div>
+      </div>
+      <div class="preview-actions">
+        <button class="btn btn-view" data-close="modal">Fechar</button>
+        <button class="btn btn-buy" onclick="document.getElementById('form').scrollIntoView({behavior:'smooth'})">Quero esse 💘</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PRODUTO 2 (preview simples) -->
+  <div class="modal" id="modal-p2" aria-hidden="true" role="dialog" aria-label="Prévia da Experiência Interativa">
+    <div class="scrim" data-close="modal"></div>
+    <div class="panel">
+      <header>
+        <h4>🎬 Experiência Digital Interativa</h4>
+        <button class="close" data-close="modal">&times;</button>
+      </header>
+      <div style="padding:18px">
+        <p style="color:var(--text-dim);margin-bottom:12px">Prévia ilustrativa da experiência (layout tipo catálogo/streaming).</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+          <div style="height:120px;border-radius:12px;background:linear-gradient(180deg,#18161a,#121016);border:1px solid var(--stroke)"></div>
+          <div style="height:120px;border-radius:12px;background:linear-gradient(180deg,#18161a,#121016);border:1px solid var(--stroke)"></div>
+          <div style="height:120px;border-radius:12px;background:linear-gradient(180deg,#18161a,#121016);border:1px solid var(--stroke)"></div>
+        </div>
+      </div>
+      <div class="preview-actions">
+        <button class="btn btn-view" data-close="modal">Fechar</button>
+        <a href="#" class="btn btn-buy">Comprar</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PRODUTO 3 (preview simples) -->
+  <div class="modal" id="modal-p3" aria-hidden="true" role="dialog" aria-label="Prévia da Cartinha Netflix">
+    <div class="scrim" data-close="modal"></div>
+    <div class="panel">
+      <header>
+        <h4>📺 Cartinha Estilo Netflix™</h4>
+        <button class="close" data-close="modal">&times;</button>
+      </header>
+      <div style="padding:18px">
+        <p style="color:var(--text-dim);margin-bottom:12px">Visual com capas, navegação por sessões e destaque animado. Ideal para declarações temáticas.</p>
+        <div style="height:220px;border-radius:14px;background:
+            radial-gradient(400px 160px at 70% -20%, rgba(255,85,60,.18), transparent 60%),
+            linear-gradient(180deg,#161419,#0f0e12);
+            border:1px solid var(--stroke)"></div>
+      </div>
+      <div class="preview-actions">
+        <button class="btn btn-view" data-close="modal">Fechar</button>
+        <a href="#" class="btn btn-buy">Comprar</a>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* ====== MODALS (abrir/fechar) ====== */
+document.querySelectorAll('[data-open]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const id = btn.getAttribute('data-open');
+    const m = document.getElementById(id);
+    if(!m) return;
+    m.classList.add('open');
+    // iniciar animações do produto 1 quando abrir
+    if(id==='modal-p1'){ initProd1(); }
+  });
+});
+document.querySelectorAll('[data-close="modal"]').forEach(el=>{
+  el.addEventListener('click',()=> el.closest('.modal').classList.remove('open'));
+});
+document.querySelectorAll('.modal .scrim').forEach(el=>{
+  el.addEventListener('click',()=> el.closest('.modal').classList.remove('open'));
+});
+
+/* ====== FORM: gerar link da cartinha (Produto 1) ====== */
+const gerarBtn = document.getElementById('gerar');
+const shareBox = document.getElementById('shareBox');
+const shareInput = document.getElementById('shareLink');
+const openLink = document.getElementById('openLink');
+const copyBtn = document.getElementById('copyBtn');
+
+gerarBtn.addEventListener('click', ()=>{
+  const dest = document.getElementById('destinatario').value.trim();
+  const rem  = document.getElementById('remetente').value.trim();
+  const tema = document.getElementById('tema').value.trim();
+  const msg  = document.getElementById('mensagem').value.trim();
+  if(!dest || !rem || !msg){
+    alert('Preencha destinatário, remetente e mensagem.'); return;
+  }
+  // 👉 troque "seu-usuario" e "cartinha.html" se necessário
+  const url = `https://seu-usuario.github.io/cartinha.html?dest=${encodeURIComponent(dest)}&rem=${encodeURIComponent(rem)}&tema=${encodeURIComponent(tema)}&msg=${encodeURIComponent(msg)}`;
+  shareInput.value = url;
+  openLink.href = url;
+  shareBox.style.display = 'block';
+  window.open(url, '_blank');
+});
+
+copyBtn.addEventListener('click', ()=>{
+  shareInput.select(); shareInput.setSelectionRange(0, 99999);
+  document.execCommand('copy');
+  copyBtn.textContent = 'Copiado!';
+  setTimeout(()=>copyBtn.textContent='Copiar link', 1200);
+});
+
+/* ====== PRODUTO 1: preview real (corações + linhas + interação + typewriter) ====== */
+let p1Inited = false;
+function initProd1(){
+  if(p1Inited) return; // evita recriar a cada abertura
+  p1Inited = true;
+  const wrap = document.getElementById('p1-wrap');
+  const canvas = document.getElementById('p1-canvas');
+  const ctx = canvas.getContext('2d');
+  const paper = document.getElementById('p1-paper');
+  const envelopeBtn = document.getElementById('p1-open');
+  const envelopeWrap = document.getElementById('p1-envelope');
+  const textEl = document.getElementById('p1-text');
+
+  // resize canvas ao tamanho do container
+  function fit(){
+    const r = wrap.getBoundingClientRect();
+    canvas.width = Math.floor(r.width * devicePixelRatio);
+    canvas.height = Math.floor(r.height * devicePixelRatio);
+    canvas.style.width = r.width+'px';
+    canvas.style.height = r.height+'px';
+    ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+  }
+  fit(); new ResizeObserver(fit).observe(wrap);
+
+  // corações
+  const hearts = [];
+  const N = 180;
+  const mouse = {x:-9999,y:-9999,active:false};
+  function newHeart(){
+    const r = wrap.getBoundingClientRect();
+    return {
+      x: Math.random()*r.width,
+      y: Math.random()*r.height,
+      vx: (Math.random()-0.5)*0.35,
+      vy: (Math.random()-0.5)*0.35,
+      s: 5+Math.random()*6,
+      base: 5+Math.random()*6,
+      o: 0.25+Math.random()*0.45,
+      pulse: Math.random()*Math.PI*2
+    };
+  }
+  for(let i=0;i<N;i++) hearts.push(newHeart());
+
+  function drawHeart(h){
+    ctx.save();
+    ctx.translate(h.x,h.y);
+    const scale = (h.s/50) * (1 + 0.06*Math.sin(h.pulse));
+    ctx.scale(scale, scale);
+    ctx.beginPath();
+    ctx.fillStyle = "rgba(255,40,120,0.72)";
+    ctx.moveTo(0,0);
+    ctx.bezierCurveTo(-25,-25,-50,10,0,40);
+    ctx.bezierCurveTo(50,10,25,-25,0,0);
+    ctx.globalAlpha = h.o;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function step(){
+    const r = wrap.getBoundingClientRect();
+    ctx.clearRect(0,0,r.width,r.height);
+
+    // conexões
+    for(let i=0;i<hearts.length;i++){
+      for(let j=i+1;j<hearts.length;j++){
+        const dx = hearts[i].x - hearts[j].x;
+        const dy = hearts[i].y - hearts[j].y;
+        const d = Math.hypot(dx,dy);
+        if(d<120){
+          const nearMouse = mouse.active && (Math.hypot((hearts[i].x-mouse.x),(hearts[i].y-mouse.y))<140 ||
+                                             Math.hypot((hearts[j].x-mouse.x),(hearts[j].y-mouse.y))<140);
+          ctx.beginPath();
+          ctx.strokeStyle = nearMouse ? "rgba(255,120,180,.35)" : "rgba(255,80,150,.16)";
+          ctx.lineWidth = nearMouse ? 1.25 : 1;
+          ctx.moveTo(hearts[i].x, hearts[i].y);
+          ctx.lineTo(hearts[j].x, hearts[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // corações
+    hearts.forEach(h=>{
+      // interação com mouse
+      if(mouse.active){
+        const dx = mouse.x - h.x;
+        const dy = mouse.y - h.y;
+        const d = Math.hypot(dx,dy);
+        if(d<90){
+          h.s = Math.min(h.s+0.9, 28);
+          h.o = Math.min(h.o+0.08, 1);
+          h.vx += dx/d * 0.02;
+          h.vy += dy/d * 0.02;
+        }else{
+          h.s = h.base;
+        }
+      }else{
+        h.s = h.base;
+      }
+
+      h.x += h.vx; h.y += h.vy; h.pulse += 0.03;
+      if(h.x < -60) h.x = r.width+60;
+      if(h.x > r.width+60) h.x = -60;
+      if(h.y < -60) h.y = r.height+60;
+      if(h.y > r.height+60) h.y = -60;
+
+      drawHeart(h);
+    });
+
+    requestAnimationFrame(step);
+  }
+  step();
+
+  // mouse interações
+  wrap.addEventListener('mousemove', e=>{
+    const rect = wrap.getBoundingClientRect();
+    mouse.x = e.clientX - rect.left;
+    mouse.y = e.clientY - rect.top;
+    mouse.active = true;
+  });
+  wrap.addEventListener('mouseleave', ()=>{mouse.active=false});
+
+  // abrir carta (estável: fade do envelope + reveal pergaminho)
+  envelopeBtn.addEventListener('click', ()=>{
+    envelopeBtn.style.opacity = '0';
+    envelopeBtn.style.transform = 'scale(0.96)';
+    setTimeout(()=> envelopeWrap.style.display='none', 260);
+
+    // revela pergaminho
+    paper.style.opacity = '1';
+    paper.style.pointerEvents = 'auto';
+    paper.style.transition = 'opacity .5s ease, transform .5s ease';
+    paper.style.transform = 'translate(-50%,-50%) scale(1.0)';
+
+    // conteudo (máquina de escrever)
+    const demoText =
+`Neste pergaminho deixo minhas palavras para você.
+Que esta mensagem toque seu coração e lembre o quanto você é especial.
+
+Com carinho e amor eterno ❤️`;
+    typeWriter(textEl, demoText, 22);
+  });
+
+  // typewriter
+  function typeWriter(el, text, speed){
+    el.innerHTML = '';
+    let i=0;
+    (function t(){
+      if(i<text.length){
+        const ch = text[i++];
+        el.innerHTML += (ch === '\n') ? '<br>' : ch;
+        setTimeout(t, speed);
+      }
+    })();
+  }
+}
+
+/* ====== Acessibilidade: ESC fecha modal ====== */
+window.addEventListener('keydown', (e)=>{
+  if(e.key==='Escape'){
+    document.querySelectorAll('.modal.open').forEach(m=>m.classList.remove('open'));
+  }
+});
+</script>
+<footer>
+  &copy; 2025 GLF Presentes Digitais • Suporte: contato@glf.com
+</footer>
+</body>
+</html>
